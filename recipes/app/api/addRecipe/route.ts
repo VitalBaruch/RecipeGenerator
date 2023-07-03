@@ -13,8 +13,8 @@ interface RequestBody {
     name : string,
     ingredients : ingredient[],
     instructions : string[],
-    pictureUrl : string,
-    userEmail : string
+    userEmail : string,
+    base64Image : string
 }
 
 export async function POST (req : Request) {
@@ -24,7 +24,7 @@ export async function POST (req : Request) {
     const accessKeyId = process.env.AWS_ACCESS_KEY
     const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
     const body: RequestBody = await req.json()
-    const {userEmail, ...recipe} = body
+    const {userEmail, base64Image, ...recipe} = body
 
     const s3 = new S3({
         credentials: {
@@ -37,7 +37,7 @@ export async function POST (req : Request) {
     const uploadFile = () => {
         const uploadParams = {
             Bucket: bucketName!,
-            Body: recipe.pictureUrl,
+            Body: base64Image,
             Key: recipe.name
         }    
         return s3.upload(uploadParams).promise()
@@ -49,6 +49,7 @@ export async function POST (req : Request) {
     await connectMongo()
     const user = await Users.findOne({email : userEmail})
     if (user) {
+        console.log(recipe);
         user.recipesArray = [...user.recipesArray, recipe]
         user.save()
         return NextResponse.json({msg : 'saved'})

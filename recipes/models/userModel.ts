@@ -1,35 +1,31 @@
 import { Schema, model, models } from "mongoose";
-import { string } from "zod";
 
-interface Ingredient {
-    name: string,
-    quantity: string
-}
+const ingredient = new Schema({
+    name: String,
+    quantity: String
+})
 
-interface Recipe  {
-    name: string,
-    ingridients: Ingredient[],
-    instructions: string[],
-    pictureUrl: string
-}
+const recipe = new Schema({
+    name: String,
+    ingredients: [ingredient],
+    instructions: [String]
+})
 
 const userSchema = new Schema({
-    username: String,
+    username: {
+        type: String,
+        require: true
+    },
     email : {
         type : String,
         require: true,
         unique : true
     },
-    password: String,
-    recipesArray : [{
-        name: String,
-        ingridients: {
-            name: String,
-            quantity: String
-        },
-        instructions: [String],
-        pictureUrl: String
-    }]
+    password: {
+        type: String,
+        require: true
+    },
+    recipesArray: [recipe]
 })
 
 const Users = models.Users || model('Users', userSchema)

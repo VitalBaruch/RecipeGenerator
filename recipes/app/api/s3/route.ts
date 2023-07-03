@@ -8,7 +8,7 @@ export async function POST(req : Request) {
     const region = process.env.AWS_REGION
     const accessKeyId = process.env.AWS_ACCESS_KEY
     const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
-    const {recipeName} = await req.json()
+    const {name} = await req.json()
 
 
     const s3 = new S3({
@@ -22,12 +22,11 @@ export async function POST(req : Request) {
     const getFile = () => {
         const getParams = {
             Bucket: bucketName!,
-            Key: recipeName  
+            Key: name  
         }
         return s3.getObject(getParams).promise()
     }
-
-    const image = await getFile()
+    const image = await getFile()    
 
     return NextResponse.json(image.Body)
 }

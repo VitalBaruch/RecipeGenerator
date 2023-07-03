@@ -1,14 +1,15 @@
 export const sendAndCheckIngridients = (ingridients : string[]) => {
-    const prompt = `Please assume you have access to recipe database
-     ans answer with the information you have also answer me in JSON format like that :
+    const prompt = `Please assume you have access to a recipe database
+     and answer with the information you have, also answer me in JSON format like that:
      {"recipes" : [ array of recipes each recipe is a json formated like that:
         {
         "name" : name of recipe,
-        "ingredients": array json of the ingredients like that {name, quantity},
-        "instructions" array of the instructions
+        "ingredients": array of ingredients formated in JSON like that: {name, quantity},
+        "instructions": array of the instructions
      }]},
-     given the ingridients: ${ingridients.map((ing => `${ing} `))}
-     give me 2 to 5 recipes that can be made using only those ingridients 
-     give the instructions to each recipe`
+     given the ingredients: ${ingridients.map((ing => `${ing} `))}
+     if one of the ingredients is not a valid ingredient name or you can't generate any
+     recipe return a recipe for pita with hummus only
+     else give me 2 to 5 recipes that can be made using only those ingredients`
     return prompt
 }

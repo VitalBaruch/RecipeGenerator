@@ -18,7 +18,6 @@ export async function POST(req : Request) {
         size: "512x512",
         response_format: 'b64_json'
       })
-      console.log(ans.data.data[0].b64_json);
       return ans.data.data[0].b64_json
     } catch(err) {
       console.log(err);
