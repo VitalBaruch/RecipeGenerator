@@ -6,6 +6,7 @@ import { sendAndCheckIngridients } from '@/utils/prompts'
 import Recipe from '@/components/Recipe'
 import {Loading} from '@nextui-org/react'
 import { test } from 'node:test'
+import { wait } from '@/utils/func'
 interface pageProps {
   
 }
@@ -30,10 +31,6 @@ const page: FC<pageProps> = ({}) => {
         const temp = [...ingridients]
         temp.splice(ind, 1);      
         setIngridients(temp)
-    }
-
-    const wait = (duration : number) => {
-        return new Promise(res => setTimeout(res, duration))
     }
 
     const {mutate: sendMessage, isLoading} = useMutation({
@@ -96,7 +93,7 @@ const page: FC<pageProps> = ({}) => {
 
     const generateRecipes = useQuery({
         queryKey: ingridients,
-        queryFn: () => wait(3000).then(() => test()),
+        queryFn: () => test(),
         enabled: false,
         onSettled: (data) => {
             console.log(data);
@@ -147,13 +144,13 @@ const page: FC<pageProps> = ({}) => {
                 }}>
                     Generate
             </button>
-            <div>
+            <>
                 {
                     generateRecipes.status === 'loading' ? 
                     <Loading /> : res !== '' ? <Recipe res={res} /> :
                     <></>
                 }
-            </div>
+            </>
         </div>
     </div>
 }

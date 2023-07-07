@@ -1,10 +1,10 @@
-export const getImageFromGPT = async (name : string) => {
+export const getImageFromGPT = async (prompt : string) => {
     const response = await fetch('/api/gpt/generateImage', {
         method: 'POST',
         headers: {
             'Content-Type' : 'application/json'
         },
-        body : JSON.stringify({name})
+        body : JSON.stringify({prompt})
     })
     const data = await response.json()
     return data as string

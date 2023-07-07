@@ -10,7 +10,7 @@ interface LoadingImageProps {
 
 const LoadingImage: FC<LoadingImageProps> = ({base64Image, name}) => {
   const [loading, setLoading] = useState(true)
-  return <div className='flex justify-center content-center w-2/5 relative m-2'>
+  return <div className='grid items-center w-2/5 relative m-2'>
     {
         loading ? <Loading /> : <></>
     }
@@ -22,6 +22,7 @@ const LoadingImage: FC<LoadingImageProps> = ({base64Image, name}) => {
              onLoadingComplete={() => {
                 setLoading(false)
              }}
+             hidden={loading}
         />
   </div>
 }

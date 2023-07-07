@@ -26,8 +26,14 @@ const NavBar: FC<NavBarProps> = () => {
                     <button 
                     className='bg-blue-500 hover:bg-blue-700 px-2 mx-2 rounded-lg text-white font-bold'  
                     onClick={() => {
-                        router.push('/recipe')
-                    }}>Generate Recipe</button>
+                        router.push('/fromIngredients')
+                    }}>Tell me what you have</button>
+                    <button className='bg-blue-500 hover:bg-blue-700 px-2 mx-2 rounded-lg text-white font-bold'
+                    onClick={() => {
+                        router.push('/fromDescription')
+                    }}>
+                       Tell me what you want 
+                    </button>
                     <button
                      className='bg-blue-500 hover:bg-blue-700 px-2 mx-2 rounded-lg text-white font-bold'
                      onClick={() => {

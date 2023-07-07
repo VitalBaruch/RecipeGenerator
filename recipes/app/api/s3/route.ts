@@ -27,6 +27,5 @@ export async function POST(req : Request) {
         return s3.getObject(getParams).promise()
     }
     const image = await getFile()    
-
-    return NextResponse.json(image.Body)
+    return NextResponse.json(image.Body?.toString())
 }

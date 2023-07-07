@@ -3,15 +3,15 @@ export interface ingredient {
     quantity: string
 }
 
-export interface recipeReturn {
+export interface recipe {
     name : string,
     ingredients : ingredient[],
     instructions : string[],
     base64Image : string
 }
 
-export interface recipeSend {
-    name : string,
-    ingredients : ingredient[],
-    instructions : string[]
+export interface user {
+    userName: string,
+    email: string,
+    recipesArray: recipe[]
 }

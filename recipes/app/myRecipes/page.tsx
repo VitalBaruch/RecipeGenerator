@@ -39,7 +39,7 @@ const page: FC<pageProps> = ({}) => {
 
     return <div>
         <h1 className='text-white text-center text-4xl font-bold mt-2'>My Recipes</h1>
-        <div className='flex justify-center mt-5'>
+        <div className='flex flex-col justify-center mt-5'>
         {
             loaded ? recipesArray!.map((recipe) => {
                return <Recipe2 recipe={recipe} key={recipe.name} />

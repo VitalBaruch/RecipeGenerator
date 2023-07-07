@@ -2,11 +2,12 @@
 
 import { FC, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { recipeReturn} from '@/utils/types'
+import { recipe} from '@/utils/types'
 import Recipe2 from './Recipe2'
-import { useMutation, useQuery } from 'react-query'
+import { useQuery } from 'react-query'
 import {Loading} from '@nextui-org/react'
 import {getImageFromAWS, getImageFromGPT} from '@/utils/getImages'
+import ButtonLoader from './ButtonLoader'
 
 interface RecipeProps {
   res : string
@@ -14,9 +15,9 @@ interface RecipeProps {
 
 const Recipe: FC<RecipeProps> = ({res}) => {
     const resObj = JSON.parse(res)
-    const [recipeArr, setRecipeArr] = useState<recipeReturn[]>(resObj.recipes)
+    const [recipeArr, setRecipeArr] = useState<recipe[]>(resObj.recipes)
 
-    const addRecipe = async (recipe: recipeReturn) => {
+    const addRecipe = async (recipe: recipe) => {
         const recipeBody = {
             name: recipe.name,
             ingredients: recipe.ingredients,
@@ -43,6 +44,7 @@ const Recipe: FC<RecipeProps> = ({res}) => {
                     recipeArr[i].base64Image = base64Image;
                 } catch (e) {
                     console.log(e);
+                    console.log(recipeArr[i].name);
                     const base64Image = await getImageFromGPT(recipeArr[i].name)
                     recipeArr[i].base64Image = base64Image
                 }
@@ -54,36 +56,21 @@ const Recipe: FC<RecipeProps> = ({res}) => {
         }
     })
 
-    // useEffect(() => {
-        
-    //     const fetchImages = async () => {
-    //         for (let i = 0; i < recipeArr.length ; i++) {
-    //             const base64Image = await getImageFromAWS(recipeArr[i].name)
-    //             console.log(base64Image);
-    //             recipeArr[i].base64Image = base64Image;
-    //         }
-    //       };
-    //       fetchImages();
-    // },[])
-
     const {data : session} = useSession();
     
     return (
-    <div>
+    <>
         {
             fetchImages.status !== 'success' ? <Loading /> :
             recipeArr.map((recipe) => {
-                return <>
-                <Recipe2 recipe={recipe} key={recipe.name} />
-                <button className='text-white hover:bg-slate-400 m-2 rounded-lg border-solid border-2 border-white' hidden={!(session && session.user)} onClick={async () => {
-                await addRecipe(recipe)
-                }}>
-                    Add Recipe
-                </button>        
-                </>
+                return <div key={recipe.name} className='flex w-full justify-center content-center'>
+                    <Recipe2 recipe={recipe} />
+                    <ButtonLoader classname='text-white hover:bg-slate-400 m-2 rounded-lg border-solid border-2 border-white'
+                        buttonName='Add Recipe' buttonFunction={() => addRecipe(recipe)} />
+                </div>
             })
         }
-    </div>)
+    </>)
 }
 
 export default Recipe

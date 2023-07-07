@@ -3,11 +3,7 @@ import Users from "@/models/userModel"
 import {NextResponse} from 'next/server'
 import S3 from 'aws-sdk/clients/s3'
 import dotenv from 'dotenv'
-
-interface ingredient {
-    name : string,
-    quantity: string
-}
+import { ingredient, recipe, user } from "@/utils/types" 
 
 interface RequestBody {
     name : string,
@@ -43,13 +39,14 @@ export async function POST (req : Request) {
         return s3.upload(uploadParams).promise()
     }
 
-    const response = await uploadFile();
-    console.log(response);
-
     await connectMongo()
     const user = await Users.findOne({email : userEmail})
     if (user) {
-        console.log(recipe);
+        if (user.recipesArray.find(((rec : recipe) => rec.name = recipe.name))) {
+            return NextResponse.json({msg : 'exist'})
+        }
+        const response = await uploadFile();
+        console.log(response);
         user.recipesArray = [...user.recipesArray, recipe]
         user.save()
         return NextResponse.json({msg : 'saved'})
