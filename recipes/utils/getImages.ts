@@ -21,3 +21,14 @@ export const getImageFromAWS = async (name : string) => {
     const data = await response.json()
     return data as string
 }
+
+export const fetchImageFromName = async (imagePrompt : string) => {
+    let res: string;
+    try {
+        res = await getImageFromAWS(imagePrompt)
+    } catch (err) {
+        console.log(err)
+        res = await getImageFromGPT(imagePrompt)
+    }
+    return res 
+}

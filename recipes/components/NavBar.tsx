@@ -1,4 +1,4 @@
-import { FC,  ReactNode } from 'react'
+import { FC } from 'react'
 import {useSession, signIn, signOut} from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
@@ -9,55 +9,81 @@ const NavBar: FC<NavBarProps> = () => {
     const {data : session} = useSession()
     const router = useRouter()
     return (
-        <nav className='flex bg-slate-500 justify-between py-2'>
-            <h1 onClick={() => {
-                router.push('/')
-            }} className='cursor-pointer font-bold rounded-lg text-white text-2xl px-2'>RecipeGen</h1>
-                <div className='w-4/5 flex justify-end pr-5'>
-                    {
-                    session && session.user ?
-                    <>
-                    <button
-                    onClick={() => {
-                        router.push('/myRecipes')
-                    }} 
-                    className='text-blue-500 font-bold mx-2 bg-white hover:bg-slate-400 px-2 rounded-lg'>
-                        {session.user.name} Recipes</button>
-                    <button 
-                    className='bg-blue-500 hover:bg-blue-700 px-2 mx-2 rounded-lg text-white font-bold'  
-                    onClick={() => {
-                        router.push('/fromIngredients')
-                    }}>Tell me what you have</button>
-                    <button className='bg-blue-500 hover:bg-blue-700 px-2 mx-2 rounded-lg text-white font-bold'
-                    onClick={() => {
-                        router.push('/fromDescription')
-                    }}>
-                       Tell me what you want 
-                    </button>
-                    <button
-                     className='bg-blue-500 hover:bg-blue-700 px-2 mx-2 rounded-lg text-white font-bold'
-                     onClick={() => {
-                        signOut()
-                        router.push('/')
-                    }}>LogOut</button>
-                    </>
-                    :
-                    <>
-                    <button
-                        className='mx-2 bg-blue-500 hover:bg-blue-700 font-bold text-white px-4 rounded-lg'
-                        onClick={() => {
-                        router.push('/register')
-                    }}>Register</button>
-                    <button
-                        className='bg-blue-500 hover:bg-blue-700 font-bold text-white px-4 rounded-lg'
-                        onClick={() => {
-                        signIn()
-                    }}>Login</button>
-                    </>
-                }
-                </div>
-        </nav>
-    )
-}
+    <div className="navbar bg-lime-500">
+      <div className="navbar-start">
+        <div className="dropdown">
+          <label tabIndex={0} className="btn btn-ghost md:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+          </label>
+          <ul tabIndex={0} className="menu menu-md dropdown-content mt-3 z-[1] p-2 shadow bg-lime-500 rounded-box w-52">
+          { session?.user && 
+          <>
+          <li>
+            <a className='hover:text-white'>Generate with</a>
+            <ul className="p-2">
+              <li><a onClick={() => {
+                router.push('/fromIngredients')
+              }} className='hover:text-white'>ingredients</a></li>
+              <li><a onClick={() => {
+                router.push('/fromDescription')
+              }} className='hover:text-white'>description</a></li>
+            </ul>
+          </li>
+          <li><a className='hover:text-white'>Forum</a></li>
+          </>
+          }
+          </ul>
+        </div>
+        <a onClick={() => {
+          router.push('/')
+        }} className="btn btn-ghost normal-case text-xl">RecipeGenerator</a>
+      </div>
+      <div className="navbar-center hidden md:flex">
+        <ul className="menu menu-horizontal px-1">
+        { session?.user &&
+        <>
+        <li tabIndex={0}>
+          <details>
+            <summary className='hover:text-white'>Generate with</summary>
+            <ul className="p-2 bg-lime-500 rounded-none">
+              <li><a onClick={() => {
+                router.push('/fromIngredients')
+              }} className=' hover:text-white'>ingredients</a></li>
+              <li><a onClick={() => {
+                router.push('/fromDescription')
+              }} className='hover:text-white'>description</a></li>
+            </ul>
+          </details>
+        </li>
+        <li><a className='hover:text-white'>Forum</a></li>
+        </>
+        }
+        </ul>
+      </div>
+      <div className="navbar-end">
+        <ul className='p-2'>
+        {
+          session?.user ?
+          <li>
+          <a onClick={() => {
+            router.push('/myRecipes')
+          }} className="btn normal-case btn-ghost mx-1 text-white text-lg">My Recipes</a> 
+          <a onClick={() => {
+            signOut()
+          }} className="btn normal-case btn-ghost text-white text-lg">Logout</a> 
+          </li> :
+          <li>
+            <a onClick={() => {
+              signIn()
+            }} className="btn normal-case btn-ghost mx-1 text-white text-lg">Login</a>
+            <a onClick={() => {
+              router.push('/register')
+            }} className="btn normal-case btn-ghost mx-1 text-white text-lg">Register</a>
+          </li>
+        }
+        </ul>
+      </div>
+    </div>
+)}
 
 export default NavBar

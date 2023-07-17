@@ -36,32 +36,32 @@ const Recipe: FC<RecipeProps> = ({res}) => {
         alert(response.msg)
     }
 
-    const fetchImages = useQuery({
-        queryFn: async () => {
-            for (let i = 0; i < recipeArr.length ; i++) {
-                try {
-                    const base64Image = await getImageFromAWS(recipeArr[i].name)
-                    recipeArr[i].base64Image = base64Image;
-                } catch (e) {
-                    console.log(e);
-                    console.log(recipeArr[i].name);
-                    const base64Image = await getImageFromGPT(recipeArr[i].name)
-                    recipeArr[i].base64Image = base64Image
-                }
-            }
-        },
-        queryKey: [res],
-        onSuccess: () => {
-            console.log('success');
-        }
-    })
+    // const fetchImages = useQuery({
+    //     queryFn: async () => {
+    //         for (let i = 0; i < recipeArr.length ; i++) {
+    //             try {
+    //                 const base64Image = await getImageFromAWS(recipeArr[i].name)
+    //                 recipeArr[i].base64Image = base64Image;
+    //             } catch (e) {
+    //                 console.log(e);
+    //                 console.log(recipeArr[i].name);
+    //                 const base64Image = await getImageFromGPT(recipeArr[i].name)
+    //                 recipeArr[i].base64Image = base64Image
+    //             }
+    //         }
+    //     },
+    //     queryKey: [res],
+    //     onSuccess: () => {
+    //         console.log('success');
+    //     }
+    // })
 
     const {data : session} = useSession();
     
     return (
     <>
         {
-            fetchImages.status !== 'success' ? <Loading /> :
+            // fetchImages.status !== 'success' ? <Loading /> :
             recipeArr.map((recipe) => {
                 return <div key={recipe.name} className='flex w-full justify-center content-center'>
                     <Recipe2 recipe={recipe} />

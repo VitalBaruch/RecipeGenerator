@@ -44,7 +44,7 @@ const page: FC<pageProps> = ({}) => {
         </div>    
       </div>
       { res !== '' &&
-      <div className="card flex-shrink-0 w-full max-w-xl shadow-2xl bg-slate-900">
+      <div className="card flex-shrink-0 w-full shadow-2xl bg-slate-900">
         <div className="card-body items-center">
           <Recipe res={res} />
         </div>

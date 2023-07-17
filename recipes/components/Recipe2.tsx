@@ -1,9 +1,9 @@
 import { FC } from 'react'
-import { recipeReturn } from '@/utils/types' 
+import { recipe } from '@/utils/types' 
 import LoadingImage from './LoadingImage'
 
 interface Recipe2Props {
-  recipe : recipeReturn
+  recipe : recipe
 }  
 
 const Recipe2: FC<Recipe2Props> = ({recipe}) => {
@@ -21,7 +21,7 @@ const Recipe2: FC<Recipe2Props> = ({recipe}) => {
             }))
         }
     </div>
-    <LoadingImage base64Image={recipe.base64Image} 
+    <LoadingImage 
     name={recipe.name} />
     </div>
 )}

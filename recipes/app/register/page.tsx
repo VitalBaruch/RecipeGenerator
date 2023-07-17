@@ -5,6 +5,7 @@ import {zodResolver} from '@hookform/resolvers/zod'
 import {z} from 'zod'
 import {useRouter} from 'next/navigation'
 import {useSession} from 'next-auth/react'
+import ErrorSilde from '@/components/errorSilde'
 
 
 interface pageProps {
@@ -65,41 +66,52 @@ const page: FC<pageProps> = ({}) => {
   interface Props {
     name : "username"|"password"|"email"|"confirmPassword"
   }
+
+  const ErrorComponent: React.FC<Props> = ({name}) => {
+    return <div className='text-red-600'>{
+      name === "username" ? errors.username?.message :
+      name === "password" ? errors.password?.message :
+      name === "email" ? errors.email?.message :
+      errors.confirmPassword?.message
+   }</div> 
+  }
   
   const InputComponent: React.FC<Props> = ({name}) => {
-    return <div className='m-2 w-3/5 flex flex-col justify-center'>
-        <input 
+    return <input 
         {...register(name, {required: true})}
         placeholder= {`Insert ${name} here...`} 
-        className='bg-transparent text-white ring-2 ring-gray-500 rounded-lg p-2 hover:ring-white focus:outline-none focus:ring-white'
+        className='input input-bordered text-black'
         />
-        <div className='text-red-600'>{
+  }
+  const inputs: ("username"|"password"|"email"|"confirmPassword")[] = ['username', 'email', 'password', 'confirmPassword']
+  return( 
+  <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col flex-wrap justify-center content-center bg-lime-500 m-5 p-2'>
+    <h1 className='text-center my-6 text-2xl font-bold text-white'>Register</h1>
+    { inputs.map((name) => {
+      return <div className='w-full flex flex-col items-center'> 
+      <input 
+      {...register(name, {required: true})}
+      placeholder= {name} 
+      className='input input-bordered w-4/5 m-2 text-black'
+      />
+      {
+        <div className='bg-error'>
+          {
             name === "username" ? errors.username?.message :
             name === "password" ? errors.password?.message :
             name === "email" ? errors.email?.message :
             errors.confirmPassword?.message
-         }</div>
-    </div>
-  }
-
-  return( 
-  <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col flex-wrap justify-center content-center'>
-    <h1 className='text-center my-6 text-2xl font-bold text-white'>Register</h1>
-    <InputComponent name='username' />
-    <InputComponent name='email' />
-    <InputComponent name='password' />
-    <InputComponent name='confirmPassword' />
-    <div className='flex justify-between w-3/5 m-2'>
+          }
+        </div>
+      }
+      </div>
+    })
+    }
+    <div className='flex justify-center'>
         <input
         className='text-center bg-blue-500 hover:bg-blue-700 cursor-pointer rounded-lg text-white w-2/5 p-2'
         type='submit'
         value={'Register'}/>
-        <button
-         className='bg-blue-500 hover:bg-blue-700 cursor-pointer rounded-lg text-white w-2/5 p-2'
-         onClick={() => {
-            router.push('/')
-         }}
-         >Back</button>
     </div>
   </form>
 )}

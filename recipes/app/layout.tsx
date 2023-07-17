@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <QueryClientProvider client={queryClient}>
         <Provider>
-          <body className={`bg-zinc-700 ${inter.className} h-screen`}>
+          <body className={` bg-gray-100 ${inter.className} min-h-screen max-h-max text-white`}>
             <NavBar/>
             {children}
           </body>
