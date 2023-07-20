@@ -4,6 +4,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import NavBar from '@/components/NavBar'
+import NavBar2 from '@/components/NavBar2'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -23,8 +24,12 @@ export default function RootLayout({
       <QueryClientProvider client={queryClient}>
         <Provider>
           <body className={` bg-gray-100 ${inter.className} min-h-screen max-h-max text-white`}>
-            <NavBar/>
-            {children}
+            <div className='relative z-50'>
+              <NavBar2/>
+            </div>
+            <div className='relative z-0 flex flex-col flex-wrap justify-center content-center'>
+              {children}
+            </div>
           </body>
       </Provider>
     </QueryClientProvider>

@@ -1,11 +1,14 @@
 "use client"
-import { FC } from 'react'
+import { FC, ReactElement, useState } from 'react'
 import {useForm, SubmitHandler} from 'react-hook-form'
 import {zodResolver} from '@hookform/resolvers/zod'
 import {z} from 'zod'
 import {useRouter} from 'next/navigation'
 import {useSession} from 'next-auth/react'
-import ErrorSilde from '@/components/errorSilde'
+import AlertSlide from '@/components/AlertSlide'
+import { Card, Modal, Input } from '@nextui-org/react'
+import SuccessModal from './successModal'
+import EmailUsedModal from './EmailUsedModal'
 
 
 interface pageProps {
@@ -36,6 +39,9 @@ const page: FC<pageProps> = ({}) => {
 
   const {data : session} = useSession()
   const router = useRouter()
+  const [loading, setLoading] = useState<boolean>(false)
+  const [modalVisible, setModalVisible] = useState<boolean>(false)
+  const [emailUsed, setEmailUsed] = useState<boolean>(false)
 
   if(session && session.user) {
     router.push('/')
@@ -46,6 +52,7 @@ const page: FC<pageProps> = ({}) => {
   })  
 
   const onSubmit = async (data: FormInput) => {
+    setLoading(true)
     const {username, email, password} = data;
     const res = await fetch('/api/signUp', {
         method: 'POST',
@@ -58,62 +65,71 @@ const page: FC<pageProps> = ({}) => {
             password
         })
     })
-    const response: any = await res.json()
-    alert(response.msg)
-    router.push('/')
+    const {msg} = await res.json()
+    setLoading(false)
+    if (msg === 'Email in use!') {
+      setEmailUsed(true)
+    } else {
+    setModalVisible(true)
+    }
   }
 
-  interface Props {
-    name : "username"|"password"|"email"|"confirmPassword"
-  }
-
-  const ErrorComponent: React.FC<Props> = ({name}) => {
-    return <div className='text-red-600'>{
-      name === "username" ? errors.username?.message :
-      name === "password" ? errors.password?.message :
-      name === "email" ? errors.email?.message :
-      errors.confirmPassword?.message
-   }</div> 
-  }
-  
-  const InputComponent: React.FC<Props> = ({name}) => {
-    return <input 
-        {...register(name, {required: true})}
-        placeholder= {`Insert ${name} here...`} 
-        className='input input-bordered text-black'
-        />
-  }
   const inputs: ("username"|"password"|"email"|"confirmPassword")[] = ['username', 'email', 'password', 'confirmPassword']
+
   return( 
-  <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col flex-wrap justify-center content-center bg-lime-500 m-5 p-2'>
-    <h1 className='text-center my-6 text-2xl font-bold text-white'>Register</h1>
+  <Card variant='bordered' css={{marginTop: '$5', width: '80%', backgroundColor:'Black'}}>
+  <Card.Body className='bg-lime-400'>  
+  <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col flex-wrap justify-center content-center'>
+    <h1 className='text-center my-6 text-2xl font-bold text-black'>Register</h1>
     { inputs.map((name) => {
-      return <div className='w-full flex flex-col items-center'> 
-      <input 
-      {...register(name, {required: true})}
-      placeholder= {name} 
-      className='input input-bordered w-4/5 m-2 text-black'
+      return <div key={name} className='w-full flex flex-col items-center'> 
+      { name !== 'password' && name !== 'confirmPassword' ?
+        <Input
+        size='xl'
+        clearable
+        underlined 
+        {...register(name, {required: true})} 
+        disabled={loading}
+        labelLeft={name}
+        css={{width: '80%', fontWeight:'$bold', mb:'$3'}}
+      /> :
+      <Input.Password
+        size='xl'
+        clearable
+        underlined 
+        {...register(name, {required: true})} 
+        disabled={loading}
+        labelLeft={name}
+        css={{width: '80%', fontWeight:'$bold', mb:'$3'}}
       />
-      {
-        <div className='bg-error'>
-          {
-            name === "username" ? errors.username?.message :
-            name === "password" ? errors.password?.message :
-            name === "email" ? errors.email?.message :
-            errors.confirmPassword?.message
-          }
-        </div>
       }
+        <div className='w-4/5'>
+          <AlertSlide type='warning' alertMessage={name === "username" ? errors.username?.message :
+                name === "password" ? errors.password?.message :
+                name === "email" ? errors.email?.message :
+                errors.confirmPassword?.message } />
+        </div>
       </div>
     })
     }
-    <div className='flex justify-center'>
+    <div className='flex justify-center mt-2'>
+      {
+        loading ?
+        <button className="btn btn-outline w-2/5 text-lg font-bold">
+          <span className="loading loading-spinner text-white"></span>
+          loading
+        </button> :
         <input
-        className='text-center bg-blue-500 hover:bg-blue-700 cursor-pointer rounded-lg text-white w-2/5 p-2'
+        className='btn btn-outline text-lg font-bold w-2/5'
         type='submit'
-        value={'Register'}/>
+        value={'Sign up ->'}/> 
+      }
     </div>
+    <EmailUsedModal modalVisible={emailUsed} setModalVisible={setEmailUsed} />
+    <SuccessModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
   </form>
+  </Card.Body>
+  </Card>
 )}
 
 

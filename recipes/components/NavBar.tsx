@@ -1,11 +1,13 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import {useSession, signIn, signOut} from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import LoginModal from './LoginModal'
 
 interface NavBarProps {
 }
 
 const NavBar: FC<NavBarProps> = () => {
+    const [modalVisible, setModalVisible] = useState<boolean>(false)
     const {data : session} = useSession()
     const router = useRouter()
     return (
@@ -69,12 +71,13 @@ const NavBar: FC<NavBarProps> = () => {
             router.push('/myRecipes')
           }} className="btn normal-case btn-ghost mx-1 text-white text-lg">My Recipes</a> 
           <a onClick={() => {
-            signOut()
+            signOut({callbackUrl: '/'})
           }} className="btn normal-case btn-ghost text-white text-lg">Logout</a> 
           </li> :
           <li>
             <a onClick={() => {
-              signIn()
+              setModalVisible(true)
+              // signIn('credentials', {callbackUrl: '/', redirect: false})
             }} className="btn normal-case btn-ghost mx-1 text-white text-lg">Login</a>
             <a onClick={() => {
               router.push('/register')
@@ -83,6 +86,7 @@ const NavBar: FC<NavBarProps> = () => {
         }
         </ul>
       </div>
+      <LoginModal visible={modalVisible} setVisible={setModalVisible} />
     </div>
 )}
 

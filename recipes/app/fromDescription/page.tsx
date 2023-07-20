@@ -1,7 +1,7 @@
 "use client"
 import ButtonLoader from '@/components/ButtonLoader'
 import Recipe from '@/components/Recipe'
-import ErrorSilde from '@/components/errorSilde'
+import ErrorSilde from '@/components/AlertSlide'
 import { sendPromptToGPT, wait } from '@/utils/func'
 import { sendAndCheckDescription } from '@/utils/prompts'
 import { FC, useState } from 'react'
