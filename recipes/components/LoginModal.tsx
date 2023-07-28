@@ -42,7 +42,7 @@ const LoginModal: FC<LoginModalProps> = ({visible, setVisible}) => {
     setErr(false)
     setVisible(false)
   }}>
-  <Modal.Body className='bg-lime-400'>
+  <Modal.Body className='bg-lime-400' >
     <h1 className='text-2xl font-bold text-black'>Sign in</h1>
     <form onSubmit={handleSubmit(onSubmit)}>
         <Input

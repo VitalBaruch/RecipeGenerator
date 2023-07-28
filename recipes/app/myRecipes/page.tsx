@@ -3,14 +3,15 @@ import { FC, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import Recipe2 from '@/components/Recipe2'
 import {Loading} from '@nextui-org/react'
-import { recipeReturn } from '@/utils/types'
+import { recipe } from '@/utils/types'
+import RecipeCard from './RecipeCard'
 
 interface pageProps {
 }
 
 const page: FC<pageProps> = ({}) => {
     const {data : session, status} = useSession();
-    const [recipesArray, setRecipesArray] = useState<recipeReturn[]>()
+    const [recipesArray, setRecipesArray] = useState<recipe[]>()
     const [loaded, setLoaded] = useState(false)
 
     const getUserRecipes = async (userEmail : string) => {
@@ -38,11 +39,11 @@ const page: FC<pageProps> = ({}) => {
     },[status])
 
     return <div>
-        <h1 className='text-white text-center text-4xl font-bold mt-2'>My Recipes</h1>
+        <h1 className='text-center text-4xl font-bold mt-2 text-black'>{session?.user?.name} Recipe Book</h1>
         <div className='flex flex-col justify-center mt-5'>
         {
             loaded ? recipesArray!.map((recipe) => {
-               return <Recipe2 recipe={recipe} key={recipe.name} />
+               return <RecipeCard recipe={recipe} key={recipe.name}/>
             })
                 
             : <Loading /> 
